@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.conectDB.ConnectionToPostgressToShowUsers;
+import org.example.conectDB.ConnectionToPostgress;
+import org.example.conectDB.ConnectionToPostgress;
 import org.example.handler.Patterns;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 //import sun.util.resources.LocaleData;
@@ -26,10 +24,10 @@ import java.util.List;
 @Getter
 public class User {
 
-    public Long id;
-    public String userName;
-    public String name;
-    public String lastName;
+    private Long id;
+    private String userName;
+    private String name;
+    private String lastName;
 
     public static final String insertNewUser = "INSERT INTO users (user_name,user_lastname,user_username) VALUES (?,?,?)";
 
@@ -64,7 +62,7 @@ public class User {
         Connection connection = null;
         PreparedStatement st = null;
         try {
-            connection = ConnectionToPostgressToShowUsers.INSTANCE.startConnection();
+            connection = ConnectionToPostgress.INSTANCE.startConnection();
             st = connection.prepareStatement(s);
             st.setString(1, name);
             st.setString(2, lastName);
@@ -74,6 +72,31 @@ public class User {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public static void showAllusers() {
+        Connection con = ConnectionToPostgress.startConnection();
+        String query = "SELECT * FROM users";
+        try (Statement statement = con.createStatement()) {
+            statement.executeQuery(query);
+            ResultSet resultSet = statement.executeQuery(query);
+          List<User> users = new ArrayList<>();
+            while (resultSet.next()) {
+                long id = resultSet.getLong("user_id");
+                String userName = resultSet.getString("user_name");
+                String firstName = resultSet.getString("user_lastname");
+                String lastName = resultSet.getString("user_username");
+
+                users.add(new User(id, userName, firstName, lastName));
+            }
+               for(User u:users){
+                   System.out.println(u);
+               }
+
+        } catch (SQLException throwables) {
+
         }
     }
 

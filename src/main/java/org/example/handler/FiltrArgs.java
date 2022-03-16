@@ -4,6 +4,9 @@ import org.example.entity.User;
 
 import java.io.IOException;
 
+import static org.example.entity.Task.createTask;
+import static org.example.entity.Task.showAllUsersWithTask;
+import static org.example.entity.User.showAllusers;
 
 
 public class FiltrArgs  {
@@ -21,12 +24,19 @@ public class FiltrArgs  {
                 break;
             case "showAllUsers":
                 System.out.println("showAllUsers");
+                showAllusers();
                 break;
             case "addTask":
                 System.out.println("addTask");
+                createTask(args);
                 break;
             case "showTasks":
+
                 System.out.println("showTasks");
+                showAllUsersWithTask(args);
+                break;
+            case "showAllTaskWithUser":
+
                 break;
             default:
                 System.out.println("Command not use, try again");
