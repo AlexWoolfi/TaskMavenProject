@@ -27,7 +27,6 @@ public class Task {
     private String title;
     private String description;
     private Long user_id;
-//    private User user;
     private List<User> users;
 
     public static void createTask(String[] args) {
@@ -41,7 +40,6 @@ public class Task {
 
         Connection con = null;
         PreparedStatement pst = null;
-        Statement statement = null;
         try {
 //            con = ConnectionToPostgress.INSTANCE.startConnection();
             con = SingeltonToDb.connectSingleToBD();
@@ -58,24 +56,25 @@ public class Task {
         }
 
     }
+
     public static void workMethod(String[] args) {
         String user_name = Patterns.cleanWorldArgs(args[1]);
-        String queryFromUser =query;
-        User user  = getDataUser(user_name,queryFromUser);
+        String queryFromUser = query;
+        User user = getDataUser(user_name, queryFromUser);
         showAllUsersWithTask(user);
 
     }
 
     public static void showAllUsersWithTask(User user) {
-        long us_id= (long)user.getId();
+        long us_id = (long) user.getId();
         String user_id = String.valueOf(us_id);
-        String queryFromUser = "SELECT * FROM tasks WHERE fk_users_id = "+user_id;
+        String queryFromUser = "SELECT * FROM tasks WHERE fk_users_id = " + user_id;
         Connection connection;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Task task;
         List<Task> tasks;
-        try{
+        try {
 
             connection = ConnectionToPostgress.startConnection();
             preparedStatement = connection.prepareStatement(queryFromUser);
@@ -94,7 +93,7 @@ public class Task {
                 task.setId(id);
                 tasks.add(task);
             }
-            for(Task t:tasks){
+            for (Task t : tasks) {
                 System.out.println(t);
             }
         } catch (SQLException throwables) {
@@ -138,16 +137,12 @@ public class Task {
 
     }
 
-
-
-
     public static User getDataUserFromTask(String taskName) {
         User user = null;
         Connection con;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         try {
-//            String query = "SELECT * FROM users WHERE user_username = ?";
             con = ConnectionToPostgress.startConnection();
             preparedStatement = con.prepareStatement(query);
             preparedStatement.setString(1, taskName);

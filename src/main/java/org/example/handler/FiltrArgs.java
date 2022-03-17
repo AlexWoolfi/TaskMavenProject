@@ -8,15 +8,15 @@ import static org.example.entity.Task.*;
 import static org.example.entity.User.showAllusers;
 
 
-public class FiltrArgs  {
+public class FiltrArgs {
     static String s = new String();
 
 
     public static void filtrFromArgs(String[] args) throws IOException {
-        for(int i=0;i<args.length;i++) {
+        for (int i = 0; i < args.length; i++) {
             s = Patterns.cleanWorldForFirstArgs(args[0]);
         }
-        switch (s){
+        switch (s) {
             case "createUser":
                 System.out.println("Ok create");
                 User.createUser(args);
@@ -30,15 +30,8 @@ public class FiltrArgs  {
                 createTask(args);
                 break;
             case "showTasks":
-
                 System.out.println("showTasks");
-//                showTasksFromUser(args);
-//                showAllUsersWithTask();
-//                showAllUsersWithTask(args);
                 workMethod(args);
-                break;
-            case "showAllTaskWithUser":
-
                 break;
             default:
                 System.out.println("Command not use, try again");

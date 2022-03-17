@@ -1,7 +1,4 @@
 package org.example.conectDB;
-
-import org.example.handler.QweryConstant;
-
 import java.sql.*;
 
 public enum ConnectionToPostgress {
