@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.conectDB.ConnectionToPostgress;
 import org.example.conectDB.ConnectionToPostgress;
+import org.example.conectDB.SingeltonToDb;
 import org.example.handler.Patterns;
 
 import java.sql.*;
@@ -42,7 +43,8 @@ public class Task {
         PreparedStatement pst = null;
         Statement statement = null;
         try {
-            con = ConnectionToPostgress.INSTANCE.startConnection();
+//            con = ConnectionToPostgress.INSTANCE.startConnection();
+            con = SingeltonToDb.connectSingleToBD();
             pst = con.prepareStatement(insertNewTASK);
             pst.setString(1, task.getTitle());
             pst.setString(2, task.getDescription());

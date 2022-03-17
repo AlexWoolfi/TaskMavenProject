@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.conectDB.ConnectionToPostgress;
 import org.example.conectDB.ConnectionToPostgress;
+import org.example.conectDB.SingeltonToDb;
 import org.example.handler.Patterns;
 
 import java.io.IOException;
@@ -77,7 +78,8 @@ public class User {
 
 
     public static void showAllusers() {
-        Connection con = ConnectionToPostgress.startConnection();
+//        Connection con = ConnectionToPostgress.startConnection();
+        Connection con = SingeltonToDb.connectSingleToBD();
         String query = "SELECT * FROM users";
         try (Statement statement = con.createStatement()) {
             statement.executeQuery(query);
