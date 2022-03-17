@@ -20,13 +20,14 @@ import java.util.List;
 public class Task {
     public static final String insertNewTASK = "INSERT INTO tasks (task_name,task_body,fk_users_id) VALUES (?,?,?)";
     public static final String query = "SELECT * FROM users WHERE user_username = ?";
-//    public static final String query2 = "SELECT * FROM tasks WHERE user_username = ?";
+    public static final String query3 = "SELECT * FROM tasks";
 
     private Long id;
     private String title;
     private String description;
-    private User user;
-//    private List<User> users;
+    private Long user_id;
+//    private User user;
+    private List<User> users;
 
     public static void createTask(String[] args) {
         Task task = new Task();
@@ -55,6 +56,49 @@ public class Task {
         }
 
     }
+    public static void workMethod(String[] args) {
+        String user_name = Patterns.cleanWorldArgs(args[1]);
+        String queryFromUser =query;
+        User user  = getDataUser(user_name,queryFromUser);
+        showAllUsersWithTask(user);
+
+    }
+
+    public static void showAllUsersWithTask(User user) {
+        long us_id= (long)user.getId();
+        String user_id = String.valueOf(us_id);
+        String queryFromUser = "SELECT * FROM tasks WHERE fk_users_id = "+user_id;
+        Connection connection;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        Task task;
+        List<Task> tasks;
+        try{
+
+            connection = ConnectionToPostgress.startConnection();
+            preparedStatement = connection.prepareStatement(queryFromUser);
+//            preparedStatement.setString(1, user_id);
+            resultSet = preparedStatement.executeQuery();
+            tasks = new ArrayList<>();
+            while (resultSet.next()) {
+                long id = resultSet.getLong("task_id");
+                String title = resultSet.getString("task_name");
+                String description = resultSet.getString("task_body");
+                int user_idD = resultSet.getInt("fk_users_id");
+                task = new Task();
+                task.setUser_id((long) user_idD);
+                task.setTitle(title);
+                task.setDescription(description);
+                task.setId(id);
+                tasks.add(task);
+            }
+            for(Task t:tasks){
+                System.out.println(t);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     public static User getDataUser(String unicNameUser, String query) {
         User user = null;
@@ -82,39 +126,18 @@ public class Task {
         return user;
     }
 
-
-    public static void showAllUsersWithTask(String[] args) {
-        Connection con;
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
+    public static void showTasksFromUser(String[] args) {
         String userName = Patterns.cleanWorldArgs(args[1]);
         String selectUser = "SELECT * FROM users WHERE user_username = ?";
         User user = getDataUser(userName, selectUser);
-        String userID = user.getId().toString();
+        long user_id = user.getId();
         System.out.println(user);
-        try {
-            String query2 = "SELECT * FROM tasks WHERE fk_users_id =?";
-            con = ConnectionToPostgress.startConnection();
-            preparedStatement = con.prepareStatement(query2);
-            preparedStatement.setString(1, userID);
-            resultSet = preparedStatement.executeQuery(query2);
-            List<Task> tasks = new ArrayList<>();
+        System.out.println(user_id);
 
-            while (resultSet.next()) {
-                long id = resultSet.getLong(1);
-                String title = resultSet.getString(2);
-                String description = resultSet.getString(3);
-
-                tasks.add(new Task(id, title, description, user));
-            }
-            for (Task t : tasks) {
-                System.out.println(t);
-            }
-
-        } catch (SQLException throwables) {
-
-        }
     }
+
+
+
 
     public static User getDataUserFromTask(String taskName) {
         User user = null;
@@ -127,7 +150,6 @@ public class Task {
             preparedStatement = con.prepareStatement(query);
             preparedStatement.setString(1, taskName);
             resultSet = preparedStatement.executeQuery();
-            user = new User();
 
             while (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
@@ -148,7 +170,7 @@ public class Task {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", user=" + user +
+                ", user_id=" + user_id +
                 '}';
     }
 }

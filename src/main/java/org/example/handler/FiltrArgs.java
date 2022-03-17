@@ -4,8 +4,7 @@ import org.example.entity.User;
 
 import java.io.IOException;
 
-import static org.example.entity.Task.createTask;
-import static org.example.entity.Task.showAllUsersWithTask;
+import static org.example.entity.Task.*;
 import static org.example.entity.User.showAllusers;
 
 
@@ -33,7 +32,10 @@ public class FiltrArgs  {
             case "showTasks":
 
                 System.out.println("showTasks");
-                showAllUsersWithTask(args);
+//                showTasksFromUser(args);
+//                showAllUsersWithTask();
+//                showAllUsersWithTask(args);
+                workMethod(args);
                 break;
             case "showAllTaskWithUser":
 
