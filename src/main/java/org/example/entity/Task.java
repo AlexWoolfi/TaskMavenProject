@@ -1,23 +1,13 @@
 package org.example.entity;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.conectDB.ConnectionToPostgress;
 import org.example.conectDB.ConnectionToPostgress;
 import org.example.conectDB.SingeltonToDb;
 import org.example.handler.Patterns;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
+
 public class Task {
     public static final String insertNewTASK = "INSERT INTO tasks (task_name,task_body,fk_users_id) VALUES (?,?,?)";
     public static final String query = "SELECT * FROM users WHERE user_username = ?";
@@ -28,6 +18,57 @@ public class Task {
     private String description;
     private Long user_id;
     private List<User> users;
+
+    public Task() {
+    }
+
+    public Task(Long id, String title, String description, Long user_id, List<User> users) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.user_id = user_id;
+        this.users = users;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     public static void createTask(String[] args) {
         Task task = new Task();
@@ -41,7 +82,6 @@ public class Task {
         Connection con = null;
         PreparedStatement pst = null;
         try {
-//            con = ConnectionToPostgress.INSTANCE.startConnection();
             con = SingeltonToDb.connectSingleToBD();
             pst = con.prepareStatement(insertNewTASK);
             pst.setString(1, task.getTitle());
