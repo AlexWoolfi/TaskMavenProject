@@ -66,9 +66,8 @@ public class Task {
     }
 
     public static void showAllUsersWithTask(User user) {
-        long us_id = (long) user.getId();
-        String user_id = String.valueOf(us_id);
-        String queryFromUser = "SELECT * FROM tasks WHERE fk_users_id = " + user_id;
+        long us_id = user.getId();
+        String queryFromUser = "SELECT * FROM tasks WHERE fk_users_id = ?";
         Connection connection;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -78,7 +77,7 @@ public class Task {
 
             connection = ConnectionToPostgress.startConnection();
             preparedStatement = connection.prepareStatement(queryFromUser);
-//            preparedStatement.setString(1, user_id);
+            preparedStatement.setLong(1,us_id);
             resultSet = preparedStatement.executeQuery();
             tasks = new ArrayList<>();
             while (resultSet.next()) {
